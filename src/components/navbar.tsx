@@ -1,6 +1,4 @@
-type NavbarProps = {};
-
-export function Navbar(props: NavbarProps) {
+export function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 bg-white px-8 py-4 shadow">
       <div className="flex items-center justify-between ">

@@ -5,9 +5,7 @@ import { BiChevronLeft, BiChevronRight, BiLogOut } from "react-icons/bi";
 import { ImProfile } from "react-icons/im";
 import { NavLink, useNavigate } from "react-router-dom";
 
-type SidebarProps = {};
-
-export function Sidebar(props: SidebarProps) {
+export function Sidebar() {
   const navigate = useNavigate();
   const { isOpen, toggle } = useAppSidebar();
 
