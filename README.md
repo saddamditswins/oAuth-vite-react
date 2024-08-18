@@ -1,50 +1,47 @@
-# React + TypeScript + Vite
+## Getting Started
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### 1. Clone this project:
 
-Currently, two official plugins are available:
+### 2. Installing dependencies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+you can install its dependencies with any tools which you use, but inside the project I used npm for pre-commit commands.
+so better to use npm.
 
-## Expanding the ESLint configuration
+```bash
+npm install
+````
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 3. run the dev server
 
-- Configure the top-level `parserOptions` property like this:
+First, run the development server:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+# Authentication using Google Email and Apple ID
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Overview
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+This is an application to perform authentication using google and apple as auth providers. 
+
+## Features
+
+- Authentication using Google Provider
+- Authentication using Apple Provider
+
+## Technologies Used
+
+- React JS
+- Vite
+- react-oauth/google (For Google Auth)
+- react-apple-signin-auth (For Apple Auth)
+- react-router-dom
+
+### Prerequisites
+
+- Node.js (18)
+- npm (10.7.0)
+
+## Live Preview URL
+[Live Preview Hosted on Vercel](https://o-auth-vite-react.vercel.app/)
