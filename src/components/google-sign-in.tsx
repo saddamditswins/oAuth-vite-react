@@ -1,21 +1,35 @@
+import { useUser } from "@/hooks/use-user";
 import { AppRoutes } from "@/lib/routes";
 import { AppConstants, setLS } from "@/lib/utils";
+import { signIn } from "@/repo/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleSignIn() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { setUser } = useUser();
   const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      // const 
-      // Post auth token to backend which will verify it and return a valid - 
-      // 1. auth token (For Google APIs) 
-      // 2. id_token (JWT)
-      // 3. refresh token
-      
-      setLS(AppConstants.auth_token, JSON.stringify(tokenResponse));
-      navigate(AppRoutes.profile)
+    onSuccess: async (tokenResponse) => {
+      try {
+        console.log("tokenResponse", tokenResponse);
+        // Post auth token to backend
+        const res = await signIn({
+          socialToken: tokenResponse.access_token,
+          loginSource: "google",
+        });
+
+        if (res) {
+          setLS(
+            AppConstants.auth_token,
+            JSON.stringify({ token: res.data.token })
+          );
+          setUser(res.data.user);
+          navigate(AppRoutes.files);
+        }
+      } catch (error) {
+        console.error("Error during sign-in:", error);
+      }
     },
   });
 

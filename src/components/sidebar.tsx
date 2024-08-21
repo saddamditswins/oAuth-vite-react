@@ -2,6 +2,7 @@ import { useAppSidebar } from "@/hooks/use-app-sidebar";
 import { AppRoutes } from "@/lib/routes";
 import { AppConstants, removeFromLS } from "@/lib/utils";
 import { BiChevronLeft, BiChevronRight, BiLogOut } from "react-icons/bi";
+import { BsFileSlides } from "react-icons/bs";
 import { ImProfile } from "react-icons/im";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -14,6 +15,11 @@ export function Sidebar() {
       name: "Profile",
       Icon: ImProfile,
       path: AppRoutes.profile,
+    },
+    {
+      name: "Files",
+      Icon: BsFileSlides,
+      path: AppRoutes.files,
     },
     {
       name: "Logout",

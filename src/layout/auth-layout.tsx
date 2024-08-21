@@ -1,12 +1,14 @@
 import LoadingPage from "@/components/loading";
 import { AppRoutes } from "@/lib/routes";
+import { AppConstants, getLS } from "@/lib/utils";
+import { IAuthToken } from "@/types/auth";
 import { useEffect } from "react";
-import { Outlet, useLoaderData, useNavigate, useNavigation } from "react-router-dom";
+import { Outlet, useNavigate, useNavigation } from "react-router-dom";
 
 export default function AuthLayout() {
-  const token = useLoaderData();
   const navigate = useNavigate();
   const navigation = useNavigation();
+  const token = getLS<IAuthToken>(AppConstants.auth_token)?.token;
 
   useEffect(() => {
     token && navigate(AppRoutes.profile);

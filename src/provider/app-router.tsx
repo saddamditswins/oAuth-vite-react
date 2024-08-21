@@ -8,6 +8,7 @@ import AuthLayout from "@/layout/auth-layout";
 // Modules
 import { SignIn } from "@/modules/auth";
 import { MyProfile } from "@/modules/profile";
+import { FileManagerPage } from "@/modules/files";
 
 // Services
 import { isAuthenticated } from "@/repo/auth";
@@ -38,6 +39,18 @@ export function AppRouteProvider() {
         {
           index: true,
           element: <MyProfile />,
+        },
+      ],
+    },
+    {
+      path: AppRoutes.files,
+      element: <ProtectedLayout />,
+      errorElement: <ErrorPage />,
+      loader: isAuthenticated,
+      children: [
+        {
+          index: true,
+          element: <FileManagerPage />,
         },
       ],
     },

@@ -1,9 +1,36 @@
 import AppleSignIn from "@/components/apple-sign-in";
 import GoogleSignIn from "@/components/google-sign-in";
+import { useUser } from "@/hooks/use-user";
+import { AppRoutes } from "@/lib/routes";
+import { AppConstants, setLS } from "@/lib/utils";
+import { signIn } from "@/repo/auth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function SignIn() {
-  const onLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
+  const { setUser } = useUser();
+
+  const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      const res = await signIn({
+        email: email,
+        password: password,
+        loginSource: "email",
+      });
+      if (res) {
+        setLS(
+          AppConstants.auth_token,
+          JSON.stringify({ token: res.data.token })
+        );
+        setUser(res.data.user);
+        navigate(AppRoutes.files);
+      }
+    } catch (error) {}
   };
 
   return (
@@ -23,11 +50,15 @@ export function SignIn() {
             className="p-2 border rounded-md"
             type="email"
             placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="p-2 border rounded-md"
             type="password"
             placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <button
             className="p-2 border rounded-md bg-blue-600 text-white"
