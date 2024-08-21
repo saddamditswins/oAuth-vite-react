@@ -1,4 +1,5 @@
 import { AppRoutes } from "@/lib/routes";
+import { logger } from "@/lib/logger";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -6,8 +7,8 @@ import {
 } from "react-router-dom";
 
 // Layouts
-import ProtectedLayout from "@/layout/protected-layout";
 import AuthLayout from "@/layout/auth-layout";
+import ProtectedLayout, { getUser } from "@/layout/protected-layout";
 
 // Modules
 import { SignIn, SignUp } from "@/modules/auth";
@@ -18,7 +19,6 @@ import { isAuthenticated } from "@/repo/auth";
 
 // UI
 import ErrorPage from "@/components/error-ui";
-import { logger } from "@/lib/logger";
 
 export function AppRouteProvider() {
   const router = createBrowserRouter([
@@ -55,17 +55,19 @@ export function AppRouteProvider() {
       path: AppRoutes.app,
       element: <ProtectedLayout />,
       errorElement: <ErrorPage />,
+      id: AppRoutes.app,
       loader: async () => {
         const token = await isAuthenticated();
-        if (!Boolean(token)) {
+        if (!token) {
           return redirect(AppRoutes.root);
         }
-        return token;
+        const user = await getUser(token.user._id);
+        return user;
       },
       children: [
         {
           path: AppRoutes.profile,
-          element: <MyProfile />,
+          element: <MyProfile />
         },
         {
           path: AppRoutes.files,

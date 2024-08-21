@@ -7,13 +7,13 @@ export async function createUser(user: IUserCreate) {
     return res.data;
 }
 
-export async function getUser(id: string) {
+export async function getUserById(id: string) {
     const res = await apiHelper.get<APIResponse<IUser>>(END_POINTS.GET_USER_BY_ID(id));
     return res.data;
 }
 
-export async function updateUser(id: string, user: IUserCreate) {
-    const res = await apiHelper.update<APIResponse<IUser>, IUserCreate>(END_POINTS.UPDATE_USER(id), user);
+export async function updateUser(id: string, user: Omit<IUserCreate, "password">) {
+    const res = await apiHelper.update<APIResponse<IUser>, Omit<IUserCreate, "password">>(END_POINTS.UPDATE_USER(id), user);
     return res.data;
 }
 
