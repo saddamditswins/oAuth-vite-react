@@ -4,8 +4,9 @@ import { AppConstants, setLS } from "@/lib/utils";
 
 import { BsApple } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import AppleSignInButton from "react-apple-signin-auth";
-import { AppleAuthResponse } from "@/types/auth";
+import AppleSignInButton, {
+  AppleAuthResponse as IAppleAuthResponse,
+} from "react-apple-signin-auth";
 
 export default function AppleSignIn() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function AppleSignIn() {
         state: "state",
         usePopup: true,
       }}
-      onSuccess={(response: AppleAuthResponse) => {
+      onSuccess={(response: IAppleAuthResponse) => {
         console.log(response);
 
         setLS(AppConstants.auth_token, JSON.stringify(response));
@@ -28,11 +29,18 @@ export default function AppleSignIn() {
       }}
       onError={(error: any) => console.error(error)}
       skipScript={false}
-      render={(props: any) => <button {...props} className="w-full border p-2 flex justify-center items-center gap-2 hover:bg-gray-50">
-        <BsApple className="h-6 w-6" />
-        <span className="text-base text-gray-700 font-medium">
-          Continue With Apple
-        </span>
-      </button>} uiType={"light"}  />
+      render={(props: any) => (
+        <button
+          {...props}
+          className="w-full border p-2 flex justify-center items-center gap-2 hover:bg-gray-50"
+        >
+          <BsApple className="h-6 w-6" />
+          <span className="text-base text-gray-700 font-medium">
+            Continue With Apple
+          </span>
+        </button>
+      )}
+      uiType={"light"}
+    />
   );
 }

@@ -1,7 +1,7 @@
 import { AppConstants, getLS } from "@/lib/utils";
-import { IGoogleAuthToken } from "@/types/auth";
+import { IAuthToken } from "@/types/auth";
 
 export async function isAuthenticated() {
-  const token = getLS(AppConstants.auth_token) as IGoogleAuthToken;
-  return token ? { token } : null;
+  const tokenObj = getLS<IAuthToken>(AppConstants.auth_token);
+  return Boolean(tokenObj?.token);
 }

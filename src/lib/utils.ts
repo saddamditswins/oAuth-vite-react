@@ -18,7 +18,7 @@ export function setLS(name: string, value: string) {
  * @param value 
  * @returns 
  */
-export function getLS(name: string) {
+export function getLS<T>(name: string): T | undefined {
   if (typeof window === "undefined") {
     return;
   }
