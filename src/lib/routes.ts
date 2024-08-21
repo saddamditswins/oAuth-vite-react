@@ -1,4 +1,6 @@
 export const AppRoutes = {
     root: "/",
-    profile: "/profile",
+    app: "/app",
+    profile: "/app/profile",
+    files: "/app/files",
 }

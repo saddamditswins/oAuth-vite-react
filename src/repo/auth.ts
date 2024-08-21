@@ -1,15 +1,12 @@
 import apiHelper, { END_POINTS } from "@/lib/api-helper";
 import { AppConstants, getLS } from "@/lib/utils";
 import { APIResponse } from "@/types/app";
-import {
-  IAuthToken,
-  ISignIn,
-  ISignInResponse,
-} from "@/types/auth";
+import { IAuthToken, ISignIn, ISignInResponse } from "@/types/auth";
 
 export async function isAuthenticated() {
+  // Can be used a caching service to store token and enhance security
   const tokenObj = getLS<IAuthToken>(AppConstants.auth_token);
-  return Boolean(tokenObj?.token);
+  return tokenObj;
 }
 
 export async function signIn(data: ISignIn) {
@@ -17,20 +14,18 @@ export async function signIn(data: ISignIn) {
 
   switch (loginSource) {
     case "apple":
-      socialToken && (await loginWithApple(socialToken));
-      return;
+      return socialToken ? await loginWithApple(socialToken) : null;
+
     case "google":
-      socialToken && (await loginWithGoogle(socialToken));
-      return;
+      return socialToken ? await loginWithGoogle(socialToken) : null;
 
     default:
-      email &&
-        password &&
-        (await loginWithCreds({
-          email,
-          password,
-        }));
-      break;
+      return email && password
+        ? await loginWithCreds({
+            email,
+            password,
+          })
+        : null;
   }
 }
 

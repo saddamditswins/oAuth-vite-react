@@ -1,3 +1,8 @@
+
+export function getProfileData() {
+
+}
+
 export function MyProfile() {
   return (
     <>

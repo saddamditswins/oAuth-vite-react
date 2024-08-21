@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AppleSignInButton, {
   AppleAuthResponse as IAppleAuthResponse,
 } from "react-apple-signin-auth";
+import { signIn } from "@/repo/auth";
 
 export default function AppleSignIn() {
   const navigate = useNavigate();
@@ -21,11 +22,18 @@ export default function AppleSignIn() {
         state: "state",
         usePopup: true,
       }}
-      onSuccess={(response: IAppleAuthResponse) => {
-        console.log(response);
+      onSuccess={async (res: IAppleAuthResponse) => {
+        try {
+          const response = await signIn({
+            socialToken: res.authorization.id_token,
+            loginSource: "apple",
+          });
 
-        setLS(AppConstants.auth_token, JSON.stringify(response));
-        navigate(AppRoutes.profile);
+          if (response && !response.error) {
+            setLS(AppConstants.auth_token, JSON.stringify(response.data));
+            navigate(AppRoutes.app);
+          }
+        } catch (error) {}
       }}
       onError={(error: any) => console.error(error)}
       skipScript={false}
