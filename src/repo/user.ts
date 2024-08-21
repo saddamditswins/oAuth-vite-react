@@ -18,6 +18,6 @@ export async function updateUser(id: string, user: Omit<IUserCreate, "password">
 }
 
 export async function deleteUser(id: string) {
-    const res = await apiHelper.delete<APIResponse<IUser>>(END_POINTS.UPDATE_USER(id));
+    const res = await apiHelper.delete<APIResponse<IUser>>(END_POINTS.DELETE_USER(id));
     return res.data;
 }
