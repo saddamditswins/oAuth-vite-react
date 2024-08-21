@@ -1,8 +1,14 @@
+import { NotFound } from "@/components/error-ui";
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
-import { Outlet } from "react-router-dom";
+import { IAuthToken } from "@/types/auth";
+import { Outlet, useLoaderData } from "react-router-dom";
 
 export default function ProtectedLayout() {
+  const { token } = useLoaderData() as { token: IAuthToken };
+  if (!token) {
+    return <NotFound />;
+  }
   return (
     <div className="h-full flex overflow-hidden">
       <Sidebar />

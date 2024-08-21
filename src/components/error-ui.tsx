@@ -3,9 +3,9 @@ import { useRouteError } from "react-router-dom";
 
 export default function ErrorPage() {
   const error = useRouteError() as any;
-logger(error)
+  logger(error);
   return (
-    <div id="error-page">
+    <div>
       <h1>Oops!</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <div>
@@ -13,6 +13,15 @@ logger(error)
         <pre>MESSAGE - {error.message}</pre>
         <pre>DATA - {error.data}</pre>
       </div>
+    </div>
+  );
+}
+
+export function NotFound() {
+  return (
+    <div>
+      <h1>Oops!</h1>
+      <p>Page Not Found.</p>
     </div>
   );
 }

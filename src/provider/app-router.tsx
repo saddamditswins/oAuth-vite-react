@@ -10,7 +10,7 @@ import ProtectedLayout from "@/layout/protected-layout";
 import AuthLayout from "@/layout/auth-layout";
 
 // Modules
-import { SignIn } from "@/modules/auth";
+import { SignIn, SignUp } from "@/modules/auth";
 import { MyProfile } from "@/modules/profile";
 
 // Services
@@ -45,6 +45,10 @@ export function AppRouteProvider() {
           index: true,
           element: <SignIn />,
         },
+        {
+          path: AppRoutes.signUp,
+          element: <SignUp />,
+        },
       ],
     },
     {
@@ -60,7 +64,6 @@ export function AppRouteProvider() {
       },
       children: [
         {
-          index: true,
           path: AppRoutes.profile,
           element: <MyProfile />,
         },
