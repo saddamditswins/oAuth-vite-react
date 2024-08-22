@@ -23,26 +23,42 @@ import { DocsList } from "@/modules/files";
 import { getAllFiles } from "@/repo/doc";
 import { extractQueryParams } from "@/lib/utils";
 
+async function protectRoute(cb: Function) {
+  try {
+    const token = await isAuthenticated();
+    logger("TOKEN from protected loader", "", token);
+
+    if (!Boolean(token)) {
+      return redirect(AppRoutes.root);
+    }
+
+    return await cb();
+  } catch (error) {
+    throw new Response("Error", { status: 500 });
+  }
+}
+
+async function publicRoute() {
+  try {
+    const token = await isAuthenticated();
+    logger("TOKEN from public loader", "", token);
+
+    if (Boolean(token)) {
+      return redirect(AppRoutes.app);
+    }
+
+    return null;
+  } catch (error) {
+    throw new Response("Error", { status: 500 });
+  }
+}
 export function AppRouteProvider() {
   const router = createBrowserRouter([
     {
       path: AppRoutes.root,
       element: <AuthLayout />,
       errorElement: <ErrorPage />,
-      loader: async () => {
-        try {
-          const token = await isAuthenticated();
-          logger("TOKEN", "", token);
-
-          if (Boolean(token)) {
-            return redirect(AppRoutes.app);
-          }
-
-          return null;
-        } catch (error) {
-          throw new Response("Error", { status: 500 });
-        }
-      },
+      loader: publicRoute,
       children: [
         {
           index: true,
@@ -52,10 +68,6 @@ export function AppRouteProvider() {
           path: AppRoutes.signUp,
           element: <SignUp />,
         },
-        {
-          path: "*",
-          element: <NotFound />,
-        },
       ],
     },
     {
@@ -63,47 +75,31 @@ export function AppRouteProvider() {
       element: <ProtectedLayout />,
       errorElement: <ErrorPage />,
       id: AppRoutes.app,
-      loader: async () => {
-        const token = await isAuthenticated();
-        if (!token) {
-          return redirect(AppRoutes.root);
-        }
-        const user = await getUser();
-        return user;
-      },
+      loader: async () =>
+        await protectRoute(async () => {
+          const user = await getUser();
+          return user;
+        }),
       children: [
         {
           path: AppRoutes.profile,
           errorElement: <ErrorPage />,
-          loader: async () => {
-            const token = await isAuthenticated();
-            if (!token) {
-              return redirect(AppRoutes.root);
-            }
-            return token;
-          },
+          loader: async () => await protectRoute(() => null),
           element: <MyProfile />,
         },
         {
           path: AppRoutes.files,
           errorElement: <ErrorPage />,
-          loader: async ({ request }) => {
-            const token = await isAuthenticated();
-            if (!token) {
-              return redirect(AppRoutes.root);
-            }
-            const queryParams = extractQueryParams(request.url);
-            const pageNum = +queryParams["page"] || 1;
-            const limit = +queryParams["limit"] || 10;
+          loader: async ({ request }) =>
+            await protectRoute(async () => {
+              const queryParams = extractQueryParams(request.url);
+              const pageNum = +queryParams["page"] || 1;
+              const limit = +queryParams["limit"] || 10;
 
-            const files = await getAllFiles(pageNum, limit);
-            return files.data;
-          },
+              const files = await getAllFiles(pageNum, limit);
+              return files.data;
+            }),
           element: <DocsList />,
-        },
-        {
-          path: "*",
-          element: <NotFound />,
         },
       ],
     },
