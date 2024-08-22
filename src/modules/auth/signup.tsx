@@ -1,35 +1,43 @@
 import AppleSignIn from "@/components/apple-sign-in";
 import GoogleSignIn from "@/components/google-sign-in";
 import { AppRoutes } from "@/lib/routes";
-import { AppConstants, setLS } from "@/lib/utils";
-import { signIn } from "@/repo/auth";
+import { createUser } from "@/repo/user";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
-type SignInForm = {
+type SignUpForm = {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
-export function SignIn() {
+export function SignUp() {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<SignInForm>({
+  const { register, handleSubmit } = useForm<SignUpForm>({
     defaultValues: {
       email: "rajan@ditstek.com",
       password: "test@123",
+      firstName: "Rajan",
+      lastName: "Verma",
     },
   });
 
-  const onLogin = async ({ email, password }: SignInForm) => {
+  const onSignup = async ({
+    email,
+    password,
+    firstName,
+    lastName,
+  }: SignUpForm) => {
     try {
-      const response = await signIn({
+      const response = await createUser({
         email,
         password,
-        loginSource: "email",
+        firstname: firstName,
+        lastname: lastName,
       });
 
       if (response && !response.error) {
-        setLS(AppConstants.auth_token, JSON.stringify(response.data));
-        navigate(AppRoutes.app);
+        navigate(AppRoutes.root);
       }
     } catch (error) {}
   };
@@ -39,14 +47,24 @@ export function SignIn() {
       <div className="bg-white shadow-xl min-w-[32rem] border p-6 space-y-8">
         {/* Heading */}
         <div className="space-y-1">
-          <h4 className="text-3xl font-semibold">Sign In</h4>
+          <h4 className="text-3xl font-semibold">Sign Up</h4>
           <p className="text-md font-light text-gray-500">
-            Please enter the details below to login and continue
+            Please enter the details below to create a new account
           </p>
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit(onLogin)} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSignup)} className="flex flex-col gap-4">
+          <input
+            className="p-2 border rounded-md"
+            placeholder="Enter your first name"
+            {...register("firstName")}
+          />
+          <input
+            className="p-2 border rounded-md"
+            placeholder="Enter your last name"
+            {...register("lastName")}
+          />
           <input
             className="p-2 border rounded-md"
             type="email"
@@ -63,7 +81,7 @@ export function SignIn() {
             className="p-2 border rounded-md bg-blue-600 text-white"
             type="submit"
           >
-            Login
+            Create Account
           </button>
         </form>
 
@@ -93,8 +111,10 @@ export function SignIn() {
 
         {/* Sign Up */}
         <div className="flex justify-center">
-          <p className="mr-1">Didn't have an account ?</p>
-          <Link to={AppRoutes.signUp} className="text-blue-500">Create new account</Link>
+          <p className="mr-1">Already have an account ?</p>
+          <Link to={AppRoutes.root} className="text-blue-500">
+            Login
+          </Link>
         </div>
       </div>
     </>

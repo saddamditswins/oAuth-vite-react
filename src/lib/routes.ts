@@ -1,4 +1,7 @@
 export const AppRoutes = {
     root: "/",
-    profile: "/profile",
+    signUp: "/sign-up",
+    app: "/app",
+    profile: "/app/profile",
+    files: "/app/files",
 }

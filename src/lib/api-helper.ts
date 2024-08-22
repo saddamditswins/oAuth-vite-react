@@ -1,27 +1,27 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-} from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { AppConstants, getLS } from "./utils";
 import { IAuthToken } from "@/types/auth";
 import { logger } from "./logger";
+import { APIResponse } from "@/types/app";
 
 export const END_POINTS = {
-  base_url: "https://7485-115-244-167-18.ngrok-free.app/",
+  base_url: "https://docscan-task.onrender.com",
 
   // Auth
   LOGIN: "/users/login",
-  
+
   // User
   CREATE_USER: "/users",
   GET_USERS: "/users",
   GET_USER_BY_ID: (id: string) => `/users/${id}`,
-  UPDATE_USER: (id: string) => `users/${id}`,
-  DELETE_USER: (id: string) => `users/${id}`,
+  UPDATE_USER: (id: string) => `/users/${id}`,
+  DELETE_USER: (id: string) => `/users/${id}`,
 
   // Documents
-  GET_FILE: (path: string) => `s3/file?filepath=${path}`,
-  UPLOAD_FILE: '/s3',
+  GET_FILES: (page: number, limit?: number) =>
+    `/storage?limit=${limit || 10}&page=${page}`,
+  GET_FILE: (path: string) => `/storage/file?filepath=${path}`,
+  UPLOAD_FILE: "/storage",
 };
 
 class APIHelper {
@@ -63,7 +63,36 @@ class APIHelper {
    * @returns R is return type wrapped in Axios response
    */
   public async get<R, C = any>(url: string, config?: AxiosRequestConfig<C>) {
-    return await this.instance.get<R>(url, config);
+    return await this.instance.get<APIResponse<R>>(url, config);
+  }
+
+  /**
+   * Get file from server
+   * @param url - Endpoint
+   * @param config - Request config of type H
+   * @returns
+   */
+  public async getFile<H>(url: string, config?: H) {
+    const enPointUrl = END_POINTS.base_url + url;
+    const tokenObj = getLS<IAuthToken>(AppConstants.auth_token);
+    const token = tokenObj?.token;
+    const res = await fetch(enPointUrl, {
+      method: "GET",
+      headers: {
+        ...config,
+        ...(token && { Authorization: token }),
+      },
+    });
+    logger("res", "", {res: res.headers?.get("Content-Disposition")});
+    if (!res.ok) {
+      logger("res", "", res);
+      throw new Error(res.statusText);
+    }
+
+    const nameArr = url.split("/");
+    const name = nameArr[nameArr.length - 1];
+    const blob = await res.blob();
+    return { blob, name };
   }
 
   /**
@@ -78,7 +107,7 @@ class APIHelper {
     body: Q,
     config?: AxiosRequestConfig<C>
   ) {
-    return await this.instance.post<R>(url, body, config);
+    return await this.instance.post<APIResponse<R>>(url, body, config);
   }
 
   /**

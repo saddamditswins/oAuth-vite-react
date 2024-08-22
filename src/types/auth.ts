@@ -3,6 +3,7 @@ import { IUser } from "./user";
 // Token stored in LS
 export interface IAuthToken {
   token: string;
+  user: IUser
 }
 
 // Interface for login request
