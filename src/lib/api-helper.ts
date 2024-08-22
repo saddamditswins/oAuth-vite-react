@@ -5,7 +5,7 @@ import { logger } from "./logger";
 import { APIResponse } from "@/types/app";
 
 export const END_POINTS = {
-  base_url: "https://docscan-task.onrender.com/",
+  base_url: "https://docscan-task.onrender.com",
 
   // Auth
   LOGIN: "/users/login",
@@ -14,8 +14,8 @@ export const END_POINTS = {
   CREATE_USER: "/users",
   GET_USERS: "/users",
   GET_USER_BY_ID: (id: string) => `/users/${id}`,
-  UPDATE_USER: (id: string) => `users/${id}`,
-  DELETE_USER: (id: string) => `users/${id}`,
+  UPDATE_USER: (id: string) => `/users/${id}`,
+  DELETE_USER: (id: string) => `/users/${id}`,
 
   // Documents
   GET_FILES: (page: number, limit?: number) =>
@@ -67,13 +67,32 @@ class APIHelper {
   }
 
   /**
-   * Get file
+   * Get file from server
    * @param url - Endpoint
-   * @param config - Request config of type C
-   * @returns R is return type wrapped in Axios response
+   * @param config - Request config of type H
+   * @returns
    */
-  public async getFile<R, C = any>(url: string, config?: AxiosRequestConfig<C>) {
-    return await this.instance.get<R>(url, config);
+  public async getFile<H>(url: string, config?: H) {
+    const enPointUrl = END_POINTS.base_url + url;
+    const tokenObj = getLS<IAuthToken>(AppConstants.auth_token);
+    const token = tokenObj?.token;
+    const res = await fetch(enPointUrl, {
+      method: "GET",
+      headers: {
+        ...config,
+        ...(token && { Authorization: token }),
+      },
+    });
+    logger("res", "", {res: res.headers?.get("Content-Disposition")});
+    if (!res.ok) {
+      logger("res", "", res);
+      throw new Error(res.statusText);
+    }
+
+    const nameArr = url.split("/");
+    const name = nameArr[nameArr.length - 1];
+    const blob = await res.blob();
+    return { blob, name };
   }
 
   /**

@@ -3,17 +3,17 @@ import { getDoc } from "@/repo/doc";
 import { IDocument } from "@/types/doc";
 import { BiDownload, BiFolderOpen } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
+import { saveAs } from 'file-saver';
 
 export function FileCard({ file }: { file: IDocument }) {
   const downloadFile = async () => {
-    try {
-      const res = await getDoc(file.filepath);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      logger("Get File", "", url)
-    } catch (error) {
-      logger("Get File", "Error", error)
+    const res = await getDoc(file.filepath);
+    if (!res) {
+      throw new Error(res);
     }
+
+    logger("Save File", "", res)
+    saveAs(res.blob, res.name);
   };
 
   return (

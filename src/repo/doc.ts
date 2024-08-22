@@ -1,9 +1,8 @@
 import apiHelper, { END_POINTS } from "@/lib/api-helper";
 import { IDocument, IDocumentResponse } from "@/types/doc";
 
-export async function getDoc(path: string) {
-  const res = await apiHelper.getFile<any>(END_POINTS.GET_FILE(path));
-  return res.data;
+export async function getDoc(path: string) {  
+  return (await apiHelper.getFile(END_POINTS.GET_FILE(path)))
 }
 
 export async function uploadDoc(file: File, type: string) {
