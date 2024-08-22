@@ -2,6 +2,7 @@ import { NotFound } from "@/components/error-ui";
 import LoadingPage from "@/components/loading";
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
+import { logger } from "@/lib/logger";
 import { getUserProfile } from "@/repo/user";
 import { IUser } from "@/types/user";
 import { Outlet, useLoaderData, useNavigation } from "react-router-dom";
@@ -17,6 +18,7 @@ export const getUser = async () => {
 
 export default function ProtectedLayout() {
   const user = useLoaderData() as IUser;
+  logger("USER", "", user)
   const navigation = useNavigation();
 
   return (

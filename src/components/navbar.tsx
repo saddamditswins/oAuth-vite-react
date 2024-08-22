@@ -41,7 +41,7 @@ export function Navbar({ user }: { user: IUser }) {
           </button>
           <div className="flex justify-center gap-4">
             <div className="text-base border rounded-full h-10 w-10 flex justify-center items-center bg-blue-500/5">
-              {user.firstname[0]}
+              {user.firstname?.[0]}
             </div>
             <div className="flex flex-col items-start mt-1">
               <p className="text-base font-semibold leading-tight">
