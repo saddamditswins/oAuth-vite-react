@@ -8,6 +8,7 @@ import AppleSignInButton, {
   AppleAuthResponse as IAppleAuthResponse,
 } from "react-apple-signin-auth";
 import { signIn } from "@/repo/auth";
+import { logger } from "@/lib/logger";
 
 export default function AppleSignIn() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function AppleSignIn() {
           }
         } catch (error) {}
       }}
-      onError={(error: any) => console.error(error)}
+      onError={(error: any) => logger(error)}
       skipScript={false}
       render={(props: any) => (
         <button
