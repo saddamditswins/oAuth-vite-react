@@ -1,5 +1,5 @@
 import apiHelper, { END_POINTS } from "@/lib/api-helper";
-import { AppConstants, getLS, removeFromLS } from "@/lib/utils";
+import { AppConstants, getLS } from "@/lib/utils";
 import { APIResponse } from "@/types/app";
 import { IAuthToken, ISignIn, ISignInResponse } from "@/types/auth";
 
