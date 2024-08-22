@@ -21,7 +21,7 @@ import { isAuthenticated } from "@/repo/auth";
 import ErrorPage, { NotFound } from "@/components/error-ui";
 import { DocsList } from "@/modules/files";
 import { getAllFiles } from "@/repo/doc";
-import { extractQueryParams } from "@/lib/utils";
+import { AppConstants, extractQueryParams, removeFromLS } from "@/lib/utils";
 
 async function protectRoute(cb: Function) {
   try {
@@ -78,6 +78,11 @@ export function AppRouteProvider() {
       loader: async () =>
         await protectRoute(async () => {
           const user = await getUser();
+
+          if (!user) {
+            removeFromLS(AppConstants.auth_token);
+            return redirect(AppRoutes.root);
+          }
           return user;
         }),
       children: [
