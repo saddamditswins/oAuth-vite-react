@@ -16,6 +16,7 @@ export interface IDocument {
     _id: string;
     user_id: string;
     filepath: string;
+    name: string;
     upload_date: string;
     filesize: string;
     document_type: string;

@@ -16,6 +16,7 @@ export function UpdateProfile() {
     register,
     formState: { errors, isSubmitting },
     control: { setError },
+    getValues
   } = useForm<IUserCreate>({
     defaultValues: {
       firstname: user.firstname,
@@ -29,7 +30,6 @@ export function UpdateProfile() {
     logger("updatedUser", "", updatedUser);
     try {
       const res = await updateUser(user._id, {
-        email: updatedUser.email,
         firstname: updatedUser.firstname,
         lastname: updatedUser.lastname,
       });
@@ -69,9 +69,10 @@ export function UpdateProfile() {
           {...register("lastname", { required: "Last Name is required!" })}
         />
         <input
-          className="p-2 border rounded-md col-span-2"
+          className="p-2 border rounded-md col-span-2 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
           placeholder="Enter your email"
-          {...register("email", { required: "Email is required!" })}
+          value={getValues("email")}
+          disabled
         />
 
         <div className="col-span-2 mt-6">

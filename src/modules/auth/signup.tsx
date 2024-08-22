@@ -1,10 +1,12 @@
 import AppleSignIn from "@/components/apple-sign-in";
 import GoogleSignIn from "@/components/google-sign-in";
+import LoadingPage from "@/components/loading";
 import { logger } from "@/lib/logger";
 import { AppRoutes } from "@/lib/routes";
 import { notify } from "@/lib/utils";
 import { createUser } from "@/repo/user";
 import { AxiosError } from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -16,11 +18,12 @@ type SignUpForm = {
 };
 export function SignUp() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-    control: {setError}
+    control: { setError },
   } = useForm<SignUpForm>({
     defaultValues: {
       email: "",
@@ -49,15 +52,22 @@ export function SignUp() {
         navigate(AppRoutes.root);
       }
     } catch (error) {
-      logger("RESPONSE DATA FOR UPLOAD", "" ,error)
+      logger("RESPONSE DATA FOR UPLOAD", "", error);
       if (error instanceof AxiosError) {
         setError("root", {
-          message: error.response?.data.message
+          message: error.response?.data.message,
         });
       }
     }
   };
 
+  if (loading) {
+    return (
+      <>
+        <LoadingPage text="Redirecting..." />
+      </>
+    );
+  }
   return (
     <>
       <div className="bg-white shadow-xl min-w-[32rem] border p-6 space-y-8">
@@ -123,10 +133,10 @@ export function SignUp() {
         {/* OAuth Login */}
         <div className="flex gap-4">
           <div className="flex-1">
-            <GoogleSignIn />
+            <GoogleSignIn onSuccess={() => setLoading(true)} />
           </div>
           <div className="flex-1">
-            <AppleSignIn />
+            <AppleSignIn onSuccess={() => setLoading(true)} />
           </div>
         </div>
 

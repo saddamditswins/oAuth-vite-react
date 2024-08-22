@@ -5,10 +5,11 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { signIn } from "@/repo/auth";
 
-export default function GoogleSignIn() {
+export default function GoogleSignIn({onSuccess}: {onSuccess: () => void}) {
   const navigate = useNavigate();
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
+      onSuccess();
       try {
         const response = await signIn({
           socialToken: tokenResponse.access_token,
@@ -17,10 +18,10 @@ export default function GoogleSignIn() {
 
         if (response && !response.error) {
           setLS(AppConstants.auth_token, JSON.stringify(response.data));
-          navigate(AppRoutes.app);
+          navigate(AppRoutes.files);
         }
       } catch (error) {}
-    },
+    }
   });
 
   return (

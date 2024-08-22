@@ -111,4 +111,6 @@ export const notify = (message: string) => {
  */
 export const AppConstants = {
   auth_token: "token",
+  max_file_size: 1073741824,
+  file_size_error: "Upload failed. You have exceeded your 1 GB storage limit. Please delete some files or upgrade your storage plan."
 };

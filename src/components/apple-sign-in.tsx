@@ -10,7 +10,7 @@ import AppleSignInButton, {
 import { signIn } from "@/repo/auth";
 import { logger } from "@/lib/logger";
 
-export default function AppleSignIn() {
+export default function AppleSignIn({onSuccess}: {onSuccess: () => void}) {
   const navigate = useNavigate();
 
   return (
@@ -24,6 +24,8 @@ export default function AppleSignIn() {
         usePopup: true,
       }}
       onSuccess={async (res: IAppleAuthResponse) => {
+        onSuccess();
+
         try {
           const response = await signIn({
             socialToken: res.authorization.id_token,
@@ -32,7 +34,7 @@ export default function AppleSignIn() {
 
           if (response && !response.error) {
             setLS(AppConstants.auth_token, JSON.stringify(response.data));
-            navigate(AppRoutes.app);
+            navigate(AppRoutes.files);
           }
         } catch (error) {}
       }}
