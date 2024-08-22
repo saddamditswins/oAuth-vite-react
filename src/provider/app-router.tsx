@@ -74,12 +74,24 @@ export function AppRouteProvider() {
       children: [
         {
           path: AppRoutes.profile,
+          errorElement: <ErrorPage />,
+          loader: async () => {
+            const token = await isAuthenticated();
+            if (!token) {
+              return redirect(AppRoutes.root);
+            }
+            return token;
+          },
           element: <MyProfile />,
         },
         {
           path: AppRoutes.files,
           errorElement: <ErrorPage />,
           loader: async ({ request }) => {
+            const token = await isAuthenticated();
+            if (!token) {
+              return redirect(AppRoutes.root);
+            }
             const queryParams = extractQueryParams(request.url);
             const pageNum = +queryParams["page"] || 1;
             const limit = +queryParams["limit"] || 10;
@@ -94,6 +106,10 @@ export function AppRouteProvider() {
           element: <NotFound />,
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ]);
 
