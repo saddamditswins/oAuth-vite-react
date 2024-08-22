@@ -77,7 +77,6 @@ export function UpdateProfile() {
 
         <div className="col-span-2 mt-6">
           {Object.keys(errors).length > 0 && <ul className="bg-red-50 text-red-600 p-2 col-span-2 mb-2 space-y-1">
-            <li className="text-sm">Please fix following errors - </li>
             {Object.keys(errors).map((err) => {
               const error = errors[err as keyof typeof errors];
               return <li className="text-sm ml-2">{error?.message}</li>;
