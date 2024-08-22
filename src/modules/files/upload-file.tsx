@@ -1,4 +1,7 @@
+import { logger } from "@/lib/logger";
+import { notify } from "@/lib/utils";
 import { uploadDoc } from "@/repo/doc";
+import { AxiosError } from "axios";
 import React, { useRef, useState } from "react";
 import { FiFilePlus } from "react-icons/fi";
 import { RiUploadCloudLine } from "react-icons/ri";
@@ -15,13 +18,17 @@ export function UploadFile() {
       if (e.target.files && e.target.files.length > 0) {
         setUploading(true);
         const res = await uploadDoc(e.target.files[0], "Doc");
-        if (!res.error) {
+        if (res.data) {
           revalidate();
-        } else {
-          setError(res.message);
+          setError("");
+          notify(res.message)
         }
       }
     } catch (error) {
+      logger("RESPONSE DATA FOR UPLOAD", "" ,error)
+      if (error instanceof AxiosError) {
+        setError(error.response?.data.message);
+      }
     } finally {
       setUploading(false);
     }
@@ -50,7 +57,7 @@ export function UploadFile() {
           </>
         )}
       </div>
-      <p>{error}</p>
+      <p className="text-sm text-red-600">{error}</p>
     </>
   );
 }

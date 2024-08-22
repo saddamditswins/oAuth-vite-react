@@ -4,8 +4,14 @@ import { IDocument } from "@/types/doc";
 import { BiDownload, BiFolderOpen } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
 import { saveAs } from 'file-saver';
+import { bytesToMB, notify } from "@/lib/utils";
+import {DateTime} from "luxon"
 
 export function FileCard({ file }: { file: IDocument }) {
+  const fileSize = bytesToMB(+file.filesize);
+  const fileUploadDate = DateTime.fromISO(file.upload_date);
+  const dateStr = fileUploadDate.toLocaleString(DateTime.DATETIME_MED);
+
   const downloadFile = async () => {
     const res = await getDoc(file.filepath);
     if (!res) {
@@ -14,6 +20,7 @@ export function FileCard({ file }: { file: IDocument }) {
 
     logger("Save File", "", res)
     saveAs(res.blob, res.name);
+    notify("File Downloaded")
   };
 
   return (
@@ -37,8 +44,8 @@ export function FileCard({ file }: { file: IDocument }) {
       </div>
       <div className="flex justify-between items-end">
         <div className="text-sm text-gray-500 mt-4">
-          <p>Size: {file.filesize}</p>
-          <p>Modified: {file.upload_date}</p>
+          <p>Size: {fileSize} MB</p>
+          <p>Uploaded At: {dateStr}</p>
         </div>
         <button onClick={downloadFile} className="p-1 rounded-full text-blue-600 hover:text-blue-800 hover:bg-gray-100">
           <BiDownload className="h-5 w-6" />

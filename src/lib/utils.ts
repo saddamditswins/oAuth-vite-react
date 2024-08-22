@@ -1,3 +1,6 @@
+import { toast } from 'react-toastify';
+import { logger } from './logger';
+
 /**
  * Local Storage setter Helper
  * @param name
@@ -99,6 +102,10 @@ export function bytesToGB(bytes: number): number {
   return parseFloat((bytes / bytesInGB).toFixed(2));
 }
 
+export const notify = (message: string) => {
+  logger("Notification", "", message)
+  toast(message)
+};
 /**
  * App Constants - Magin strings
  */

@@ -1,8 +1,10 @@
 import AppleSignIn from "@/components/apple-sign-in";
 import GoogleSignIn from "@/components/google-sign-in";
+import { logger } from "@/lib/logger";
 import { AppRoutes } from "@/lib/routes";
-import { AppConstants, setLS } from "@/lib/utils";
+import { AppConstants, notify, setLS } from "@/lib/utils";
 import { signIn } from "@/repo/auth";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -16,6 +18,7 @@ export function SignIn() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    control: { setError },
   } = useForm<SignInForm>({
     defaultValues: {
       email: "",
@@ -33,9 +36,17 @@ export function SignIn() {
 
       if (response && !response.error) {
         setLS(AppConstants.auth_token, JSON.stringify(response.data));
+        notify(response.message);
         navigate(AppRoutes.app);
       }
-    } catch (error) {}
+    } catch (error) {
+      logger("RESPONSE DATA FOR UPLOAD", "", error);
+      if (error instanceof AxiosError) {
+        setError("root", {
+          message: error.response?.data.message,
+        });
+      }
+    }
   };
 
   return (

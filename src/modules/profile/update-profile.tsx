@@ -1,7 +1,9 @@
 import { logger } from "@/lib/logger";
 import { AppRoutes } from "@/lib/routes";
+import { notify } from "@/lib/utils";
 import { updateUser } from "@/repo/user";
 import { IUser, IUserCreate } from "@/types/user";
+import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRevalidator, useRouteLoaderData } from "react-router-dom";
 
@@ -34,12 +36,20 @@ export function UpdateProfile() {
 
       if (!res.error) {
         revalidate();
+        notify(res.message);
       } else {
         setError("root", {
           message: res.message,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      logger("RESPONSE DATA FOR UPLOAD", "" ,error)
+      if (isAxiosError(error)) {
+        setError("root", {
+          message: error.response?.data.message
+        });
+      }
+    }
   };
 
   return (
