@@ -19,6 +19,9 @@ import { isAuthenticated } from "@/repo/auth";
 
 // UI
 import ErrorPage from "@/components/error-ui";
+import { DocsList } from "@/modules/files";
+import { getAllFiles } from "@/repo/doc";
+import { extractQueryParams } from "@/lib/utils";
 
 export function AppRouteProvider() {
   const router = createBrowserRouter([
@@ -71,7 +74,16 @@ export function AppRouteProvider() {
         },
         {
           path: AppRoutes.files,
-          element: <>FIles</>,
+          errorElement: <ErrorPage />,
+          loader: async ({request}) => {
+            const queryParams = extractQueryParams(request.url);
+            const pageNum = +queryParams["page"] || 1;
+            const limit = +queryParams["limit"] || 10;
+            
+            const files = await getAllFiles(pageNum, limit);
+            return files.data;
+          },
+          element: <DocsList />,
         },
       ],
     },

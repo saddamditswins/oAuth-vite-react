@@ -1,17 +1,15 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-} from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { AppConstants, getLS } from "./utils";
 import { IAuthToken } from "@/types/auth";
 import { logger } from "./logger";
+import { APIResponse } from "@/types/app";
 
 export const END_POINTS = {
   base_url: "https://docscan-task.onrender.com/",
 
   // Auth
   LOGIN: "/users/login",
-  
+
   // User
   CREATE_USER: "/users",
   GET_USERS: "/users",
@@ -20,8 +18,10 @@ export const END_POINTS = {
   DELETE_USER: (id: string) => `users/${id}`,
 
   // Documents
-  GET_FILE: (path: string) => `s3/file?filepath=${path}`,
-  UPLOAD_FILE: '/s3',
+  GET_FILES: (page: number, limit?: number) =>
+    `/storage?limit=${limit || 10}&page=${page}`,
+  GET_FILE: (path: string) => `/storage/file?filepath=${path}`,
+  UPLOAD_FILE: "/storage",
 };
 
 class APIHelper {
@@ -63,6 +63,16 @@ class APIHelper {
    * @returns R is return type wrapped in Axios response
    */
   public async get<R, C = any>(url: string, config?: AxiosRequestConfig<C>) {
+    return await this.instance.get<APIResponse<R>>(url, config);
+  }
+
+  /**
+   * Get file
+   * @param url - Endpoint
+   * @param config - Request config of type C
+   * @returns R is return type wrapped in Axios response
+   */
+  public async getFile<R, C = any>(url: string, config?: AxiosRequestConfig<C>) {
     return await this.instance.get<R>(url, config);
   }
 
@@ -78,7 +88,7 @@ class APIHelper {
     body: Q,
     config?: AxiosRequestConfig<C>
   ) {
-    return await this.instance.post<R>(url, body, config);
+    return await this.instance.post<APIResponse<R>>(url, body, config);
   }
 
   /**

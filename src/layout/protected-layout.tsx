@@ -19,14 +19,6 @@ export default function ProtectedLayout() {
   const user = useLoaderData() as IUser;
   const navigation = useNavigation();
 
-  if (navigation.state === "loading") {
-    return <LoadingPage />
-  }
-
-  if (!user) {
-    return <NotFound />;
-  }
-
   return (
     <div className="h-full flex overflow-hidden">
       <Sidebar />
@@ -34,8 +26,14 @@ export default function ProtectedLayout() {
       <div className="flex-1 flex flex-col">
         <Navbar user={user} />
 
-        <div className="flex-1 overflow-auto pt-[5rem] pl-4 bg-primary/5">
-          <Outlet />
+        <div className="flex-1 overflow-auto pt-[5rem] pl-4">
+          {navigation.state === "loading" ? (
+            <LoadingPage />
+          ) : !user ? (
+            <NotFound />
+          ) : (
+            <Outlet />
+          )}
         </div>
       </div>
     </div>

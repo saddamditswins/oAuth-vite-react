@@ -12,6 +12,9 @@ export interface IUser {
   email: string;
   login_source: string;
   status: number;
+  maxStorageLimit: number;
+  totalFileSize: number;
+  totalDocuments: number;
   createdAt: string;
   updatedAt: string;
   google_token?: string;

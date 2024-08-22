@@ -4,7 +4,7 @@ import { AppRoutes } from "@/lib/routes";
 import { AppConstants, removeFromLS } from "@/lib/utils";
 import { deleteUser } from "@/repo/user";
 import { IUser } from "@/types/user";
-import { BiTrashAlt } from "react-icons/bi";
+import { BiFolderOpen, BiTrashAlt } from "react-icons/bi";
 import { ImProfile } from "react-icons/im";
 import { NavLink, useLoaderData, useNavigate } from "react-router-dom";
 
@@ -18,6 +18,11 @@ export function Sidebar() {
       name: "Profile",
       Icon: ImProfile,
       path: AppRoutes.profile,
+    },
+    {
+      name: "My Files",
+      Icon: BiFolderOpen,
+      path: AppRoutes.files,
     },
   ];
 
