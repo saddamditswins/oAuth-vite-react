@@ -50,6 +50,10 @@ export function SignIn() {
           message: error.response?.data.message,
         });
       }
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 
