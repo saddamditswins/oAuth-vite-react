@@ -13,12 +13,16 @@ type SignUpForm = {
 };
 export function SignUp() {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<SignUpForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<SignUpForm>({
     defaultValues: {
-      email: "rajan@ditstek.com",
-      password: "test@123",
-      firstName: "Rajan",
-      lastName: "Verma",
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
     },
   });
 
@@ -77,11 +81,23 @@ export function SignUp() {
             placeholder="Enter password"
             {...register("password")}
           />
+
+          {Object.keys(errors).length > 0 && (
+            <ul className="bg-red-50 text-red-600 p-2 col-span-2 mb-2 space-y-1">
+              <li className="text-sm">Please fix following errors - </li>
+              {Object.keys(errors).map((err) => {
+                const error = errors[err as keyof typeof errors];
+                return <li className="text-sm ml-2">{error?.message}</li>;
+              })}
+            </ul>
+          )}
+
           <button
-            className="p-2 border rounded-md bg-blue-600 text-white"
+            className="p-2 border rounded-md bg-blue-600 text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
             type="submit"
+            disabled={isSubmitting}
           >
-            Create Account
+            {isSubmitting ? "Creating.." : "Create Account"}
           </button>
         </form>
 

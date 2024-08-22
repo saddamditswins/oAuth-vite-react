@@ -12,10 +12,14 @@ type SignInForm = {
 };
 export function SignIn() {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<SignInForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInForm>({
     defaultValues: {
-      email: "rajan@ditstek.com",
-      password: "test@123",
+      email: "",
+      password: "",
     },
   });
 
@@ -59,11 +63,22 @@ export function SignIn() {
             placeholder="Enter password"
             {...register("password")}
           />
+
+          {Object.keys(errors).length > 0 && (
+            <ul className="bg-red-50 text-red-600 p-2 col-span-2 mb-2 space-y-1">
+              <li className="text-sm">Please fix following errors - </li>
+              {Object.keys(errors).map((err) => {
+                const error = errors[err as keyof typeof errors];
+                return <li className="text-sm ml-2">{error?.message}</li>;
+              })}
+            </ul>
+          )}
           <button
-            className="p-2 border rounded-md bg-blue-600 text-white"
+            className="p-2 border rounded-md bg-blue-600 text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
             type="submit"
+            disabled={isSubmitting}
           >
-            Login
+            {isSubmitting ? "Logging In..." : "Login"}
           </button>
         </form>
 
@@ -94,7 +109,9 @@ export function SignIn() {
         {/* Sign Up */}
         <div className="flex justify-center">
           <p className="mr-1">Didn't have an account ?</p>
-          <Link to={AppRoutes.signUp} className="text-blue-500">Create new account</Link>
+          <Link to={AppRoutes.signUp} className="text-blue-500">
+            Create new account
+          </Link>
         </div>
       </div>
     </>

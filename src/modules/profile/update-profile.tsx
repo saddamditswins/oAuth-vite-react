@@ -12,7 +12,7 @@ export function UpdateProfile() {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     control: { setError },
   } = useForm<IUserCreate>({
     defaultValues: {
@@ -74,8 +74,9 @@ export function UpdateProfile() {
           </ul>}
 
           <button
-            className="p-2 border rounded-md bg-blue-600 text-white"
+            className="p-2 border rounded-md bg-blue-600 text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
             type="submit"
+            disabled={isSubmitting}
           >
             Update Profile
           </button>
