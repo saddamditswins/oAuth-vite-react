@@ -1,15 +1,16 @@
 import { useAppSidebar } from "@/hooks/use-app-sidebar";
 import { logger } from "@/lib/logger";
 import { AppRoutes } from "@/lib/routes";
-import { AppConstants, removeFromLS } from "@/lib/utils";
+import { AppConstants, notify, removeFromLS } from "@/lib/utils";
 import { deleteUser } from "@/repo/user";
 import { IUser } from "@/types/user";
+import { AxiosError } from "axios";
 import { BiFolderOpen, BiTrashAlt } from "react-icons/bi";
 import { ImProfile } from "react-icons/im";
 import { NavLink, useLoaderData, useNavigate } from "react-router-dom";
 
 export function Sidebar() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const user = useLoaderData() as IUser;
   const { isOpen } = useAppSidebar();
 
@@ -27,14 +28,23 @@ export function Sidebar() {
   ];
 
   const onDeleteAccount = async () => {
-    try {
-      const res = await deleteUser(user._id);
-      logger("Response on Delete", "",res)
-      if (res.status) {
-        removeFromLS(AppConstants.auth_token);
-        navigate(AppRoutes.root);
+    const confirmation = confirm("Are you sure ?");
+
+    if (confirmation) {
+      try {
+        const res = await deleteUser(user._id);
+        logger("Response on Delete", "", res);
+        if (res.status) {
+          removeFromLS(AppConstants.auth_token);
+          navigate(AppRoutes.root);
+        }
+      } catch (error) {
+        logger("DELETE ACCOUNT ERROR", "", error);
+        if (error instanceof AxiosError) {
+          notify(error.response?.data.message);
+        }
       }
-    } catch (error) {}
+    }
   };
   return (
     <div

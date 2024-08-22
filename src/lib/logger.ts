@@ -1,7 +1,9 @@
 export const logger = (log: string, level?: string, trace?: any) => {
-  console.log({
-    log,
-    level,
-    trace,
-  });
+  import.meta.env.DEV
+    ? console.log({
+        log,
+        level,
+        trace,
+      })
+    : null;
 };
