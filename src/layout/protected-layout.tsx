@@ -2,17 +2,16 @@ import LoadingPage from "@/components/loading";
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
 import { AppRoutes } from "@/lib/routes";
-import { AppConstants, getLS } from "@/lib/utils";
-import { IAuthToken } from "@/types/auth";
 import { useEffect } from "react";
 import {
   Outlet,
+  useLoaderData,
   useNavigate,
   useNavigation,
 } from "react-router-dom";
 
 export default function ProtectedLayout() {
-  const token = getLS<IAuthToken>(AppConstants.auth_token)?.token;
+  const token = useLoaderData();
   const navigate = useNavigate();
   const navigation = useNavigation();
 

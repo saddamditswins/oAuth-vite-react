@@ -7,7 +7,7 @@ import { IAuthToken } from "@/types/auth";
 import { logger } from "./logger";
 
 export const END_POINTS = {
-  base_url: "https://docscan-task.onrender.com/",
+  base_url: "https://7485-115-244-167-18.ngrok-free.app/",
 
   // Auth
   LOGIN: "/users/login",
