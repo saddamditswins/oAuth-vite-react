@@ -2,12 +2,12 @@ import { NotFound } from "@/components/error-ui";
 import LoadingPage from "@/components/loading";
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
-import { getUserById } from "@/repo/user";
+import { getUserProfile } from "@/repo/user";
 import { IUser } from "@/types/user";
 import { Outlet, useLoaderData, useNavigation } from "react-router-dom";
 
-export const getUser = async (id: string) => {
-  const res = await getUserById(id);
+export const getUser = async () => {
+  const res = await getUserProfile();
   if (res) {
     return res.data;
   }

@@ -13,6 +13,7 @@ export const END_POINTS = {
   // User
   CREATE_USER: "/users",
   GET_USERS: "/users",
+  GET_USER_PROFILE: "/profile",
   GET_USER_BY_ID: (id: string) => `/users/${id}`,
   UPDATE_USER: (id: string) => `/users/${id}`,
   DELETE_USER: (id: string) => `/users/${id}`,

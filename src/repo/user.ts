@@ -12,6 +12,11 @@ export async function getUserById(id: string) {
     return res.data;
 }
 
+export async function getUserProfile() {
+    const res = await apiHelper.get<APIResponse<IUser>>(END_POINTS.GET_USER_PROFILE);
+    return res.data;
+}
+
 export async function updateUser(id: string, user: Omit<IUserCreate, "password">) {
     const res = await apiHelper.update<APIResponse<IUser>, Omit<IUserCreate, "password">>(END_POINTS.UPDATE_USER(id), user);
     return res.data;

@@ -68,7 +68,7 @@ export function AppRouteProvider() {
         if (!token) {
           return redirect(AppRoutes.root);
         }
-        const user = await getUser(token.user._id);
+        const user = await getUser();
         return user;
       },
       children: [
