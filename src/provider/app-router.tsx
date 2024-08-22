@@ -44,7 +44,7 @@ async function publicRoute() {
     logger("TOKEN from public loader", "", token);
 
     if (Boolean(token)) {
-      return redirect(AppRoutes.app);
+      return redirect(AppRoutes.files);
     }
 
     return null;
